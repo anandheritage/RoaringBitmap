@@ -2,6 +2,7 @@ plugins {
     id("net.researchgate.release") version "2.8.1"
     id("com.github.ben-manes.versions") version "0.38.0"
     id("maven-publish")
+    id("signing")
     id("com.diffplug.spotless") version "6.25.0"
 }
 
@@ -26,7 +27,7 @@ subprojects {
         mavenCentral()
     }
 
-    group = "org.roaringbitmap"
+    group = "io.github.anandheritage"  // Test namespace for Central Portal testing
 
     tasks {
         withType<JavaCompile> {
@@ -96,9 +97,12 @@ subprojects {
     }
 }
 
+// Central Portal Publishing Configuration (Staging API)
 subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach { project ->
     project.run {
         apply(plugin = "maven-publish")
+        apply(plugin = "signing")
+        
         configure<JavaPluginExtension> {
             withSourcesJar()
             withJavadocJar()
@@ -106,41 +110,34 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
 
         configure<PublishingExtension> {
             publications {
-                register<MavenPublication>("sonatype") {
+                register<MavenPublication>("maven") {
                     groupId = project.group.toString()
                     artifactId = project.name
                     version = project.version.toString()
 
                     from(components["java"])
 
-                    // requirements for maven central
-                    // https://central.sonatype.org/pages/requirements.html
                     pom {
                         name.set("${project.group}:${project.name}")
                         description.set("Roaring bitmaps are compressed bitmaps (also called bitsets) which tend to outperform conventional compressed bitmaps such as WAH or Concise.")
                         url.set("https://github.com/RoaringBitmap/RoaringBitmap")
-                        issueManagement {
-                            system.set("GitHub Issue Tracking")
-                            url.set("https://github.com/RoaringBitmap/RoaringBitmap/issues")
-                        }
+                        
                         licenses {
                             license {
-                                name.set("Apache 2")
+                                name.set("Apache License 2.0")
                                 url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                                distribution.set("repo")
                             }
                         }
+                        
                         developers {
                             developer {
                                 id.set("lemire")
                                 name.set("Daniel Lemire")
                                 email.set("lemire@gmail.com")
                                 url.set("http://lemire.me/en/")
-                                roles.addAll("architect", "developer", "maintainer")
-                                timezone.set("-5")
-                                properties.put("picUrl", "http://lemire.me/fr/images/JPG/profile2011B_152.jpg")
                             }
                         }
+                        
                         scm {
                             connection.set("scm:git:https://github.com/RoaringBitmap/RoaringBitmap.git")
                             developerConnection.set("scm:git:https://github.com/RoaringBitmap/RoaringBitmap.git")
@@ -150,30 +147,35 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
                 }
             }
 
-             // A safe throw-away place to publish to:
-            // ./gradlew publishSonatypePublicationToLocalDebugRepository -Pversion=foo
             repositories {
+                // Maven Central via Central Portal Staging API
                 maven {
-                    name = "localDebug"
-                    url = project.buildDir.toPath().resolve("repos").resolve("localDebug").toUri()
-                }
-            }
-
-            // ./gradlew publishSonatypePublicationToGitHubPackagesRepository
-            repositories {
-                maven {
-                    name = "GitHubPackages"
-                    url = uri("https://maven.pkg.github.com/RoaringBitmap/RoaringBitmap")
+                    name = "CentralPortal"
+                    url = uri("https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC")
                     credentials {
-                        username = System.getenv("GITHUB_ACTOR")
-                        password = System.getenv("GITHUB_TOKEN")
+                        username = System.getenv("MAVEN_CENTRAL_USERNAME")
+                        password = System.getenv("MAVEN_CENTRAL_PASSWORD")
                     }
                 }
+                
+                // Local testing repository
+                maven {
+                    name = "LocalTest"
+                    url = uri("file://${project.layout.buildDirectory.get().asFile}/local-repo")
+                }
             }
-
         }
 
-
+        configure<SigningExtension> {
+            // Temporarily disable signing for Central Portal testing
+            val signingKey = System.getenv("GPG_SIGNING_KEY")
+            val signingPassword = System.getenv("GPG_SIGNING_PASSWORD")
+            if (signingKey != null && signingPassword != null) {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign(publishing.publications["maven"])
+            }
+            // Note: Maven Central requires signing for production releases
+        }
     }
 }
 
