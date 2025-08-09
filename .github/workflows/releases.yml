@@ -10,8 +10,6 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: roaring
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
@@ -20,10 +18,8 @@ jobs:
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
       - name: Build with Gradle
         run: ./gradlew build -x test -i
-        working-directory: ./roaring
       - name: Publish to Maven Central (Central Portal)
-        run: ./gradlew publishMavenPublicationToCentralPortalRepository -i
-        working-directory: ./roaring
+        run: ./gradlew roaringbitmap:publishMavenPublicationToCentralPortalRepository bsi:publishMavenPublicationToCentralPortalRepository -i
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
