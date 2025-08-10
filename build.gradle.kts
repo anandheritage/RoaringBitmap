@@ -2,6 +2,7 @@ plugins {
     id("net.researchgate.release") version "2.8.1"
     id("com.github.ben-manes.versions") version "0.38.0"
     id("maven-publish")
+    id("signing")
     id("com.diffplug.spotless") version "6.25.0"
 }
 
@@ -169,10 +170,30 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
                         password = System.getenv("GITHUB_TOKEN")
                     }
                 }
+                
+                // Maven Central publishing via Central Portal (new methodology)
+                maven {
+                    name = "CentralPortal"
+                    url = uri("https://central.sonatype.com/api/v1/publisher/upload")
+                    credentials {
+                        username = System.getenv("MAVEN_CENTRAL_USERNAME")
+                        password = System.getenv("MAVEN_CENTRAL_PASSWORD")
+                    }
+                }
             }
 
         }
 
+        // Signing configuration for Maven Central
+        apply(plugin = "signing")
+        configure<SigningExtension> {
+            val signingKey = System.getenv("GPG_SIGNING_KEY")
+            val signingPassword = System.getenv("GPG_SIGNING_PASSWORD")
+            if (signingKey != null && signingPassword != null) {
+                useInMemoryPgpKeys(signingKey, signingPassword)
+                sign(the<PublishingExtension>().publications["sonatype"])
+            }
+        }
 
     }
 }
