@@ -177,7 +177,7 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
                 // Maven Central publishing via Central Portal (new methodology)
                 maven {
                     name = "CentralPortal"
-                    url = uri("https://central.sonatype.com/api/v1/publisher/upload")
+                    url = uri("https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC")
                     credentials {
                         username = System.getenv("MAVEN_CENTRAL_USERNAME")
                         password = System.getenv("MAVEN_CENTRAL_PASSWORD")
@@ -195,6 +195,8 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             if (signingKey != null && signingPassword != null) {
                 useInMemoryPgpKeys(signingKey, signingPassword)
                 sign(the<PublishingExtension>().publications["sonatype"])
+            } else {
+                println("Warning: GPG signing key or password not found. Artifacts will not be signed.")
             }
         }
 
