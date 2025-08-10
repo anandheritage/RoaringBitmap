@@ -201,6 +201,43 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             }
         }
 
+        // Create bundle and upload to Maven Central
+        tasks.register("publishToMavenCentral") {
+            group = "publishing"
+            description = "Creates a bundle and uploads it to Maven Central via Central Portal API"
+            
+            dependsOn("publishSonatypePublicationToLocalDebugRepository")
+            dependsOn("signSonatypePublication")
+            
+            doLast {
+                val repoDir = project.buildDir.toPath().resolve("repos").resolve("localDebug")
+                val bundleFile = project.buildDir.resolve("bundle-${project.name}-${project.version}.zip")
+                
+                // Create ZIP bundle from local repository
+                project.ant.withGroovyBuilder {
+                    "zip"("destfile" to bundleFile.absolutePath, "basedir" to repoDir.toString())
+                }
+                
+                // Upload bundle to Maven Central
+                val username = System.getenv("MAVEN_CENTRAL_USERNAME")
+                val password = System.getenv("MAVEN_CENTRAL_PASSWORD")
+                
+                if (username != null && password != null) {
+                    val uploadUrl = "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC"
+                    
+                    exec {
+                        commandLine("curl", "-X", "POST", 
+                            "-H", "Content-Type: multipart/form-data",
+                            "-F", "bundle=@${bundleFile.absolutePath}",
+                            "-u", "$username:$password",
+                            uploadUrl)
+                    }
+                } else {
+                    throw GradleException("Maven Central credentials not found. Set MAVEN_CENTRAL_USERNAME and MAVEN_CENTRAL_PASSWORD environment variables.")
+                }
+            }
+        }
+
     }
 }
 
