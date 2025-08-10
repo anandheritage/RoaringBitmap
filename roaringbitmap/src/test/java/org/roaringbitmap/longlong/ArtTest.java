@@ -1,6 +1,9 @@
 package org.roaringbitmap.longlong;
 
-import org.roaringbitmap.art.*;
+import org.roaringbitmap.art.Art;
+import org.roaringbitmap.art.BranchNode;
+import org.roaringbitmap.art.LeafNode;
+import org.roaringbitmap.art.LeafNodeIterator;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
