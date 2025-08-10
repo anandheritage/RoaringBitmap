@@ -27,7 +27,7 @@ subprojects {
         mavenCentral()
     }
 
-    group = "org.roaringbitmap"
+    group = "io.github.anandheritage"
 
     tasks {
         withType<JavaCompile> {
@@ -167,7 +167,7 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             repositories {
                 maven {
                     name = "GitHubPackages"
-                    url = uri("https://maven.pkg.github.com/RoaringBitmap/RoaringBitmap")
+                    url = uri("https://maven.pkg.github.com/anandheritage/RoaringBitmap")
                     credentials {
                         username = System.getenv("GITHUB_ACTOR")
                         password = System.getenv("GITHUB_TOKEN")
