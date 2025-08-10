@@ -1,0 +1,47 @@
+name: Simple Build Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'anandsh/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Java 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      
+      - name: Test basic Gradle commands
+        run: |
+          echo "Testing basic Gradle functionality..."
+          ./gradlew --version
+          echo "---"
+          ./gradlew projects
+          echo "---"
+          ./gradlew tasks --group publishing
+      
+      - name: Run build
+        run: ./gradlew build -x test
+      
+      - name: Test local publishing
+        run: ./gradlew publishToMavenLocal
+      
+      - name: List generated artifacts
+        run: |
+          echo "Generated JAR files:"
+          find . -name "*.jar" -path "*/build/libs/*" | head -10
+          echo "Generated POM files:"
+          find ~/.m2 -name "*.pom" | grep -E "(roaringbitmap|bsi)" | head -10

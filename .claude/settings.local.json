@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh run list:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(./gradlew:*)",
+      "Bash(gh release:*)"
+    ],
+    "deny": []
+  }
+}
