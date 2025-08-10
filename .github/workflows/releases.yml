@@ -35,7 +35,7 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Publish to Maven Central
-        run: ./gradlew publishSonatypePublicationToCentralPortalRepository -i --stacktrace --debug
+        run: ./gradlew publishSonatypePublicationToCentralPortalRepository -i --stacktrace
         working-directory: ./roaring
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
