@@ -2816,10 +2816,10 @@ public class TestRoaringBitmap {
     // https://github.com/RoaringBitmap/CRoaring/tree/master/tests/testdata
     String resourceName = "/testdata/bad-bitmap.bin";
     try (InputStream inputStream = TestAdversarialInputs.openInputstream(resourceName);
-         DataInputStream dataInputStream = new DataInputStream(inputStream)) {
-        MutableRoaringBitmap bitmap = new MutableRoaringBitmap();
-        bitmap.deserialize(dataInputStream);
-        assertFalse(bitmap.validate());
+        DataInputStream dataInputStream = new DataInputStream(inputStream)) {
+      MutableRoaringBitmap bitmap = new MutableRoaringBitmap();
+      bitmap.deserialize(dataInputStream);
+      assertFalse(bitmap.validate());
     }
   }
 
