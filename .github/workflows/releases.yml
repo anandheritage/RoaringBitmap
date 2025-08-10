@@ -28,6 +28,12 @@ jobs:
         env:
           GITHUB_USER: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Debug PGP Key
+        run: |
+          echo "GPG_SIGNING_KEY length: ${#GPG_SIGNING_KEY}"
+          echo "Key starts with: $(echo "$GPG_SIGNING_KEY" | head -c 50)"
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Publish to Maven Central
         run: ./gradlew publishSonatypePublicationToCentralPortalRepository -i
         working-directory: ./roaring
