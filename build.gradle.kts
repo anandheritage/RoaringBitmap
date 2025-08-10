@@ -193,7 +193,8 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             val signingKey = System.getenv("GPG_SIGNING_KEY")
             val signingPassword = System.getenv("GPG_SIGNING_PASSWORD")
             if (signingKey != null && signingPassword != null) {
-                useInMemoryPgpKeys(signingKey, signingPassword)
+                val decodedKey = String(java.util.Base64.getDecoder().decode(signingKey))
+                useInMemoryPgpKeys(decodedKey, signingPassword)
                 sign(the<PublishingExtension>().publications["sonatype"])
             } else {
                 println("Warning: GPG signing key or password not found. Artifacts will not be signed.")
