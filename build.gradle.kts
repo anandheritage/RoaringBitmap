@@ -3,6 +3,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.38.0"
     id("maven-publish")
     id("com.diffplug.spotless") version "6.25.0"
+    id("com.vanniktech.maven.publish") version "0.34.0" apply false
 }
 
 
@@ -99,6 +100,7 @@ subprojects {
 subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach { project ->
     project.run {
         apply(plugin = "maven-publish")
+        apply(plugin = "com.vanniktech.maven.publish")
         configure<JavaPluginExtension> {
             withSourcesJar()
             withJavadocJar()
@@ -173,6 +175,61 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
 
         }
 
+        // Configure Maven Central publishing with vanniktech plugin
+        configure<com.vanniktech.maven.publish.MavenPublishBaseExtension> {
+            coordinates(project.group.toString(), project.name, project.version.toString())
+            
+            publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+            signAllPublications()
+            
+            // Map GitHub secrets to plugin expected names
+            if (System.getenv("MAVEN_CENTRAL_USERNAME") != null) {
+                System.setProperty("ORG_GRADLE_PROJECT_mavenCentralUsername", System.getenv("MAVEN_CENTRAL_USERNAME"))
+            }
+            if (System.getenv("MAVEN_CENTRAL_PASSWORD") != null) {
+                System.setProperty("ORG_GRADLE_PROJECT_mavenCentralPassword", System.getenv("MAVEN_CENTRAL_PASSWORD"))
+            }
+            if (System.getenv("GPG_SIGNING_KEY") != null) {
+                System.setProperty("ORG_GRADLE_PROJECT_signingInMemoryKey", System.getenv("GPG_SIGNING_KEY"))
+            }
+            if (System.getenv("GPG_SIGNING_PASSWORD") != null) {
+                System.setProperty("ORG_GRADLE_PROJECT_signingInMemoryKeyPassword", System.getenv("GPG_SIGNING_PASSWORD"))
+            }
+            
+            pom {
+                name.set("${project.group}:${project.name}")
+                description.set("Roaring bitmaps are compressed bitmaps (also called bitsets) which tend to outperform conventional compressed bitmaps such as WAH or Concise.")
+                url.set("https://github.com/RoaringBitmap/RoaringBitmap")
+                
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        distribution.set("repo")
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id.set("lemire")
+                        name.set("Daniel Lemire")
+                        email.set("lemire@gmail.com")
+                        url.set("http://lemire.me/en/")
+                    }
+                }
+                
+                scm {
+                    connection.set("scm:git:https://github.com/RoaringBitmap/RoaringBitmap.git")
+                    developerConnection.set("scm:git:https://github.com/RoaringBitmap/RoaringBitmap.git")
+                    url.set("https://github.com/RoaringBitmap/RoaringBitmap")
+                }
+                
+                issueManagement {
+                    system.set("GitHub Issue Tracking")
+                    url.set("https://github.com/RoaringBitmap/RoaringBitmap/issues")
+                }
+            }
+        }
 
     }
 }
