@@ -1,9 +1,9 @@
 plugins {
-    id("net.researchgate.release") version "2.8.1"
-    id("com.github.ben-manes.versions") version "0.38.0"
+    id("net.researchgate.release") version "3.0.2"
+    id("com.github.ben-manes.versions") version "0.51.0"
     id("maven-publish")
     id("com.diffplug.spotless") version "6.25.0"
-    id("com.vanniktech.maven.publish") version "0.34.0" apply false
+    id("com.vanniktech.maven.publish") version "0.28.0" apply false
 }
 
 
