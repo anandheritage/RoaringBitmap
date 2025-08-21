@@ -159,6 +159,11 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             }
         }
 
+        // Fix task dependencies for publishing
+        tasks.named("generateMetadataFileForMavenPublication") {
+            dependsOn("plainJavadocJar")
+        }
+
         // Keep existing GitHub Packages repository for backward compatibility
         configure<PublishingExtension> {
             repositories {
