@@ -144,14 +144,14 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
                 }
                 
                 scm {
-                    connection.set("scm:git:git://github.com/RoaringBitmap/RoaringBitmap.git")
-                    developerConnection.set("scm:git:ssh://github.com:RoaringBitmap/RoaringBitmap.git")
-                    url.set("https://github.com/RoaringBitmap/RoaringBitmap")
+                    connection.set("scm:git:git://github.com/anandheritage/RoaringBitmap.git")
+                    developerConnection.set("scm:git:ssh://github.com:anandheritage/RoaringBitmap.git")
+                    url.set("https://github.com/anandheritage/RoaringBitmap")
                 }
                 
                 issueManagement {
                     system.set("GitHub")
-                    url.set("https://github.com/RoaringBitmap/RoaringBitmap/issues")
+                    url.set("https://github.com/anandheritage/RoaringBitmap/issues")
                 }
             }
         }
@@ -161,7 +161,7 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
             repositories {
                 maven {
                     name = "GitHubPackages"
-                    url = uri("https://maven.pkg.github.com/RoaringBitmap/RoaringBitmap")
+                    url = uri("https://maven.pkg.github.com/anandheritage/RoaringBitmap")
                     credentials {
                         username = System.getenv("GITHUB_ACTOR")
                         password = System.getenv("GITHUB_TOKEN")
