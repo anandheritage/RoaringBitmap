@@ -106,7 +106,7 @@ subprojects.filter { listOf("roaringbitmap", "bsi").contains(it.name) }.forEach 
         
         configure<JavaPluginExtension> {
             withSourcesJar()
-            withJavadocJar()
+            // withJavadocJar() // Removed - Vanniktech plugin handles javadoc jar
         }
 
         mavenPublishing {
