@@ -131,7 +131,7 @@ public class Node4 extends BranchNode {
         byte thisPrefixLength = this.prefixLength();
         byte newLength = (byte) (childPrefixLength + thisPrefixLength + 1);
         byte[] newPrefix = new byte[newLength];
-        System.arraycopy(this.prefix, 0, newPrefix, 0,thisPrefixLength);
+        System.arraycopy(this.prefix, 0, newPrefix, 0, thisPrefixLength);
         newPrefix[thisPrefixLength] = IntegerUtil.firstByte(key);
         System.arraycopy(child.prefix, 0, newPrefix, thisPrefixLength + 1, childPrefixLength);
         child.prefix = newPrefix;

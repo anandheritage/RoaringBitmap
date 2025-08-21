@@ -19,7 +19,7 @@ public class Art {
   private Node root;
   private long keySize = 0;
 
-  final static byte[] EMPTY_BYTES = new byte[0];
+  static final byte[] EMPTY_BYTES = new byte[0];
 
   public Art() {
     root = null;
@@ -93,7 +93,8 @@ public class Art {
       byte branchNodePrefixLength = branchNode.prefixLength();
       if (branchNodePrefixLength > 0) {
         int commonLength =
-            commonPrefixLength(key, depth, key.length, branchNode.prefix, 0, branchNodePrefixLength);
+            commonPrefixLength(
+                key, depth, key.length, branchNode.prefix, 0, branchNodePrefixLength);
         if (commonLength != branchNodePrefixLength) {
           return null;
         }
@@ -109,15 +110,16 @@ public class Art {
     }
     return null;
   }
+
   private LeafNode findByKey(Node node, long key) {
     int depth = 0;
     while (node != null) {
-      //compare branch node first, its most common case
+      // compare branch node first, its most common case
       if (node instanceof BranchNode) {
         BranchNode branchNode = (BranchNode) node;
         byte branchNodePrefixLength = branchNode.prefixLength();
         if (branchNodePrefixLength > 0) {
-          //TODO - we should expose a prefix() that is a long. So much time spend looping here
+          // TODO - we should expose a prefix() that is a long. So much time spend looping here
           // when this could be a O(1) long mask & compare
           byte[] prefix = branchNode.prefix;
           for (int i = 0; i < branchNodePrefixLength; i++) {
@@ -129,7 +131,7 @@ public class Art {
           // common prefix is the same ,then increase the depth
           depth += branchNodePrefixLength;
         }
-        //TODO - expose an API that avoids this double dipping
+        // TODO - expose an API that avoids this double dipping
         int pos = branchNode.getChildPos(LongUtils.getByte(key, depth));
         if (pos == BranchNode.ILLEGAL_IDX) {
           return null;
@@ -139,7 +141,7 @@ public class Art {
       } else {
         LeafNode leafNode = (LeafNode) node;
         long leafNodeKey = leafNode.getKey();
-        return leafNodeKey == LongUtils.rightShiftHighPart(key)? leafNode: null;
+        return leafNodeKey == LongUtils.rightShiftHighPart(key) ? leafNode : null;
       }
     }
     return null;
@@ -300,7 +302,8 @@ public class Art {
         int newPrefixLength = (int) branchNodePrefixLength - (mismatchPos + 1);
         // move the remained common prefix of the initial internal node
         // as the new prefix is always > 0, we just allocate and fill the new prefix
-        branchNode.prefix = Arrays.copyOfRange(branchNode.prefix,mismatchPos + 1, branchNodePrefixLength);
+        branchNode.prefix =
+            Arrays.copyOfRange(branchNode.prefix, mismatchPos + 1, branchNodePrefixLength);
 
         LeafNode leafNode = new LeafNode(key, containerIdx);
         node4.insert(leafNode, key[mismatchPos + depth]);
@@ -391,7 +394,7 @@ public class Art {
 
   private void serialize(Node node, DataOutput dataOutput) throws IOException {
     if (node instanceof BranchNode) {
-      BranchNode branchNode = (BranchNode)node;
+      BranchNode branchNode = (BranchNode) node;
       // serialize the internal node itself first
       branchNode.serialize(dataOutput);
       // then all the internal node's children
@@ -410,7 +413,7 @@ public class Art {
 
   private void serialize(Node node, ByteBuffer byteBuffer) throws IOException {
     if (node instanceof BranchNode) {
-      BranchNode branchNode = (BranchNode)node;
+      BranchNode branchNode = (BranchNode) node;
       // serialize the internal node itself first
       branchNode.serialize(byteBuffer);
       // then all the internal node's children

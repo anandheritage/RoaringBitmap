@@ -21,7 +21,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test -i
         working-directory: ./roaring
-      - name: Publish package
+      - name: Publish to GitHub Packages
         run: ./gradlew publishSonatypePublicationToGitHubPackagesRepository -i
         working-directory: ./roaring
         env:

@@ -325,7 +325,7 @@ public class TestSerialization {
     // https://github.com/RoaringBitmap/CRoaring/tree/master/tests/testdata
     String resourceName = "/testdata/bad-bitmap.bin";
     try (InputStream inputStream = TestAdversarialInputs.openInputstream(resourceName);
-         DataInputStream dataInputStream = new DataInputStream(inputStream)) {
+        DataInputStream dataInputStream = new DataInputStream(inputStream)) {
       RoaringBitmap bitmap = new RoaringBitmap();
       bitmap.deserialize(dataInputStream);
       assertFalse(bitmap.validate());

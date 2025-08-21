@@ -20,6 +20,7 @@ public class LongUtils {
       (byte) ((num >>> 16) & 0xff)
     };
   }
+
   public static long highPartOnly(long num) {
     return num & 0xFF_FF_FF_FF_FF_FF_00_00L;
   }
@@ -99,6 +100,7 @@ public class LongUtils {
         | (long) (work[6] & 0xff) << 8
         | (long) (work[7] & 0xff);
   }
+
   /**
    * get the long from the big endian representation bytes
    *
@@ -107,12 +109,12 @@ public class LongUtils {
    */
   public static long fromKey(byte[] key) {
     return (long) (key[0]) << 56
-            /* long cast needed or shift done modulo 32 */
-            | (long) (key[1] & 0xff) << 48
-            | (long) (key[2] & 0xff) << 40
-            | (long) (key[3] & 0xff) << 32
-            | (long) (key[4] & 0xff) << 24
-            | (long) (key[5] & 0xff) << 16;
+        /* long cast needed or shift done modulo 32 */
+        | (long) (key[1] & 0xff) << 48
+        | (long) (key[2] & 0xff) << 40
+        | (long) (key[3] & 0xff) << 32
+        | (long) (key[4] & 0xff) << 24
+        | (long) (key[5] & 0xff) << 16;
   }
 
   /**
@@ -186,5 +188,4 @@ public class LongUtils {
   public static byte getByte(long key, int i) {
     return (byte) (key >> ((7 - i) << 3));
   }
-
 }
