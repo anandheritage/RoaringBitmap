@@ -276,7 +276,7 @@ public class ArtTest {
     lnIt.seek(LongUtils.toLong(key0, (char) 0));
     Assertions.assertTrue(lnIt.hasNext());
     assertArrayEquals(key0, lnIt.peekNext().getKeyBytes());
-    assertArrayEquals(key0,  lnIt.next().getKeyBytes());
+    assertArrayEquals(key0, lnIt.next().getKeyBytes());
     Assertions.assertFalse(lnIt.hasNext());
 
     // seeking to the prior "1" takes you there.. so this needs to be guarded against, in higher
@@ -425,7 +425,7 @@ public class ArtTest {
     byte b = 0;
     long containerIdx = 0;
     for (int i = 0; i < keyNum; i++, b++, containerIdx++) {
-      byte[] key = new byte[]{1, 2, 3, 4, 5, b};
+      byte[] key = new byte[] {1, 2, 3, 4, 5, b};
       art.insert(key, containerIdx);
     }
   }
@@ -434,7 +434,7 @@ public class ArtTest {
     byte b = 0;
     long containerIdx = 0;
     for (int i = 0; i < keyNum; i++, b += (byte) 2, containerIdx++) {
-      byte[] key = new byte[]{1, 2, 3, 4, 5, b};
+      byte[] key = new byte[] {1, 2, 3, 4, 5, b};
       art.insert(key, containerIdx);
     }
   }

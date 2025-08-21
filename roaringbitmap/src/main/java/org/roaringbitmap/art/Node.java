@@ -7,8 +7,7 @@ import java.nio.ByteBuffer;
 
 public abstract class Node {
 
-  public Node() {
-  }
+  public Node() {}
 
   /**
    * sort the small arrays through the insertion sort alg.
@@ -132,9 +131,9 @@ public abstract class Node {
    */
   public abstract int serializeNodeBodySizeInBytes();
 
-  protected abstract void serializeHeader(DataOutput dataOutput) throws IOException ;
+  protected abstract void serializeHeader(DataOutput dataOutput) throws IOException;
 
-  protected abstract void serializeHeader(ByteBuffer byteBuffer) throws IOException ;
+  protected abstract void serializeHeader(ByteBuffer byteBuffer) throws IOException;
 
   protected int serializeHeaderSizeInBytes() {
     return 1 + 2 + 1;

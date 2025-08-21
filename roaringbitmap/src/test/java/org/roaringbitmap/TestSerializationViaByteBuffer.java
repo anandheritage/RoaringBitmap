@@ -1,14 +1,11 @@
 package org.roaringbitmap;
 
 import static java.nio.channels.FileChannel.MapMode.READ_WRITE;
-import static java.nio.file.Files.delete;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,7 +22,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 @Execution(ExecutionMode.CONCURRENT)

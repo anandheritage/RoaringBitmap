@@ -126,7 +126,7 @@ public abstract class AbstractShuttle implements Shuttle {
       oldEntry.node = node;
       oldEntry.startFromNextSiblingPosition = true;
       if (node instanceof BranchNode) {
-        oldEntry.position = ((BranchNode)node).getChildPos(oldEntry.leafNodeNextSiblingKey);
+        oldEntry.position = ((BranchNode) node).getChildPos(oldEntry.leafNodeNextSiblingKey);
       }
     }
   }
@@ -190,7 +190,8 @@ public abstract class AbstractShuttle implements Shuttle {
     byte branchNodePrefixLength = branchNode.prefixLength();
     if (branchNodePrefixLength > 0) {
       int commonLength =
-          Art.commonPrefixLength(high, keyDepth, high.length, branchNode.prefix, 0, branchNodePrefixLength);
+          Art.commonPrefixLength(
+              high, keyDepth, high.length, branchNode.prefix, 0, branchNodePrefixLength);
       if (commonLength != branchNodePrefixLength) {
         byte nodeValue = branchNode.prefix[commonLength];
         byte highValue = high[keyDepth + commonLength];
